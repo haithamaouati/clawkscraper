@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eyas</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -27,7 +28,9 @@
                     <input type="text" id="username-input" placeholder="INPUT_USERNAME" autocomplete="off" spellcheck="false">
                     <button id="search-btn" class="primary-btn">FETCH DATA</button>
                 </div>
-                <p id="error-msg" class="status-msg mono hidden"></p>
+                <div class="action-footer">
+                    <button id="clear-btn" class="secondary-btn-small mono">CLEAR_SESSION</button>
+                </div>
             </div>
 
             <div id="app-content" class="hidden fade-in">
@@ -44,8 +47,20 @@
                 </div>
 
                 <div class="meta-row">
-                    <div class="pill mono" id="u-region-val"></div>
-                    <div class="pill mono">LANG: <span id="u-lang-val"></span></div>
+                    <div class="pill pill-refined mono" id="u-region-val"></div>
+                    <div class="pill pill-refined mono">LANG: <span id="u-lang-val"></span></div>
+                </div>
+
+                <div class="map-view-container">
+                    <div class="map-header mono">
+                        <span>GEOLOCATION_VISUALIZER</span>
+                        <div class="map-controls">
+                            <button id="zoom-in" class="map-ctrl-btn">+</button>
+                            <button id="zoom-out" class="map-ctrl-btn">−</button>
+                        </div>
+                    </div>
+                    <div id="world-map-wrapper" class="draggable"></div>
+                    <div id="active-country-label" class="mono">LOCATION: NONE</div>
                 </div>
 
                 <div class="grid-stats">
@@ -68,14 +83,17 @@
                                 <button class="copy-btn" onclick="copyText('d-userid')">COPY</button>
                             </div>
                         </div>
-
                         <div class="d-split">
-                            <div class="d-row"><span class="d-lab mono">VERIFIED</span><span id="d-verified"></span></div>
-                            <div class="d-row"><span class="d-lab mono">PRIVATE</span><span id="d-private"></span></div>
+                            <div class="d-row">
+                                <span class="d-lab mono">VERIFIED</span>
+                                <span id="d-verified" class="mono"></span>
+                            </div>
+                            <div class="d-row">
+                                <span class="d-lab mono">PRIVATE</span>
+                                <span id="d-private" class="mono"></span>
+                            </div>
                         </div>
-                        
                         <div class="d-row"><span class="d-lab mono">CREATED_AT</span><span id="d-created"></span></div>
-                        
                         <div class="d-row">
                             <span class="d-lab mono">SEC_UID</span>
                             <div class="copy-field">
