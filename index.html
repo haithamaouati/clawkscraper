@@ -6,114 +6,155 @@
     <title>Eyas</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="void-wrapper">
-        <button id="theme-toggle" class="theme-btn-fixed" aria-label="Toggle Theme">
-            <span class="icon">☀︎</span>
-        </button>
-
-        <header class="main-header-centered">
-            <img src="logo.png" alt="Logo" class="app-logo-raw">
-            <h1 class="brand-name-large">EYAS</h1>
-            <p class="app-tagline-mono">TIKTOK_USER_INFO_SCRAPER</p>
-        </header>
+        <nav class="navbar-primary">
+            <div class="nav-left">
+                <div class="brand-block">
+                    <img src="logo.png" alt="Logo" class="nav-logo">
+                    <div class="brand-text">
+                        <span class="brand-name-mini">EYAS</span>
+                        <span class="brand-tagline-mini mono">TikTok User Info Scraper</span>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-right">
+                <button id="theme-toggle" class="theme-btn-nav" aria-label="Toggle Theme">
+                    <span class="icon">☀︎</span>
+                </button>
+            </div>
+        </nav>
 
         <main class="utility-center">
             <div class="monolithic-card">
                 <div class="input-container">
-                    <span class="mono-prefix">@</span>
-                    <input type="text" id="username-input" placeholder="INPUT_USERNAME" autocomplete="off" spellcheck="false">
-                    <button id="search-btn" class="primary-btn">FETCH DATA</button>
+                    <span class="mono-prefix">USERNAME:</span>
+                    <input type="text" id="username-input" placeholder="Enter username..." autocomplete="off" spellcheck="false">
+                    <button id="search-btn" class="primary-btn">Scrape</button>
                 </div>
                 <div class="action-footer">
-                    <button id="clear-btn" class="secondary-btn-small mono">CLEAR_SESSION</button>
+                    <button id="clear-btn" class="secondary-btn-small mono">CLEAR</button>
                 </div>
+            </div>
+
+            <div id="loading-state" class="hidden">
+                <div class="skeleton skeleton-avatar"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="skeleton skeleton-rect"></div>
             </div>
 
             <div id="app-content" class="hidden fade-in">
                 <div class="profile-hero-vertical">
-                    <div class="avatar-void-rounded">
+                    <h2 id="u-nickname"></h2>
+                    <div class="avatar-void-rounded" id="avatar-download-trigger" title="CLICK_TO_EXTRACT">
                         <img id="u-avatar" src="" alt="Avatar">
                     </div>
-                    <div class="identity-void">
-                        <h2 id="u-nickname"></h2>
+                    <div class="handle-wrapper">
                         <p id="u-handle" class="mono"></p>
+                        <img id="v-icon" src="verified.svg" alt="Verified" class="v-badge hidden">
+                    </div>
+                    <div class="bio-container">
                         <p id="u-bio"></p>
-                        <a id="u-link" href="#" target="_blank" class="view-link mono">VIEW_PROFILE</a>
+                        <a id="u-link" href="#" target="_blank" class="view-link mono">VIEW_TIKTOK_PROFILE</a>
                     </div>
                 </div>
 
                 <div class="meta-row">
-                    <div class="pill pill-refined mono" id="u-region-val"></div>
-                    <div class="pill pill-refined mono">LANG: <span id="u-lang-val"></span></div>
+                    <div class="pill mono" id="u-region-val">REGION: NULL</div>
+                    <div class="pill mono" id="u-lang-label">LANGUAGE: <span id="u-lang-val"></span></div>
+                    <div class="pill mono" id="u-eng-label">ENGAGEMENT: <span id="u-engagement"></span></div>
                 </div>
 
                 <div class="map-view-container">
-                    <div class="map-header mono">
-                        <span>GEOLOCATION_VISUALIZER</span>
-                        <div class="map-controls">
-                            <button id="zoom-in" class="map-ctrl-btn">+</button>
-                            <button id="zoom-out" class="map-ctrl-btn">−</button>
-                        </div>
-                    </div>
-                    <div id="world-map-wrapper" class="draggable"></div>
-                    <div id="active-country-label" class="mono">LOCATION: NONE</div>
+                    <div class="map-header mono"><span>GEOGRAPHIC_MAPPING</span></div>
+                    <div id="world-map-wrapper" class="cool-map-surface"></div>
+                    <div id="active-country-label" class="mono">MAPPED_LOC: NONE</div>
                 </div>
 
-                <div class="grid-stats">
-                    <div class="stat-box"><span class="val" id="s-followers">-</span><span class="lab mono">FOLLOWERS</span></div>
-                    <div class="stat-box"><span class="val" id="s-following">-</span><span class="lab mono">FOLLOWING</span></div>
-                    <div class="stat-box"><span class="val" id="s-hearts">-</span><span class="lab mono">HEARTS</span></div>
-                    <div class="stat-box"><span class="val" id="s-videos">-</span><span class="lab mono">VIDEOS</span></div>
-                    <div class="stat-box full"><span class="val" id="s-friends">-</span><span class="lab mono">FRIENDS</span></div>
+                <div class="stats-section">
+                    <h3 class="pane-title-clean mono section-label-refined">STATISTICS</h3>
+                    <div class="cyber-grid">
+                        <div class="cyber-stat">
+                            <span class="cy-lab mono">FOLLOWING</span>
+                            <span class="cy-val" id="s-following">-</span>
+                            <div class="cy-bar"><div class="cy-progress"></div></div>
+                        </div>
+                        <div class="cyber-stat">
+                            <span class="cy-lab mono">FOLLOWERS</span>
+                            <span class="cy-val" id="s-followers">-</span>
+                            <div class="cy-bar"><div class="cy-progress"></div></div>
+                        </div>
+                        <div class="cyber-stat">
+                            <span class="cy-lab mono">LIKES</span>
+                            <span class="cy-val" id="s-hearts">-</span>
+                            <div class="cy-bar"><div class="cy-progress"></div></div>
+                        </div>
+                        <div class="cyber-stat">
+                            <span class="cy-lab mono">VIDEOS</span>
+                            <span class="cy-val" id="s-videos">-</span>
+                            <div class="cy-bar"><div class="cy-progress"></div></div>
+                        </div>
+                        <div class="cyber-stat full-width">
+                            <span class="cy-lab mono">FRIENDS</span>
+                            <span class="cy-val" id="s-friends">-</span>
+                            <div class="cy-bar"><div class="cy-progress"></div></div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="details-pane binary-surface">
-                    <div class="pane-header">
-                        <h3 class="pane-title-clean mono">TECHNICAL_DETAILS</h3>
-                    </div>
-                    <div class="details-list">
-                        <div class="d-row">
-                            <span class="d-lab mono">USER_ID</span>
-                            <div class="copy-field">
-                                <span id="d-userid" class="mono"></span>
-                                <button class="copy-btn" onclick="copyText('d-userid')">COPY</button>
+                <div class="system-pane">
+                    <h3 class="pane-title-clean mono section-label-refined">SYSTEM_PARAMETERS</h3>
+                    <div class="system-grid-container">
+                        <div class="sys-item full-width-box boxed-sys-group">
+                            <span class="sys-key mono">User ID</span>
+                            <div class="sys-value-field-flat" onclick="reveal(this)">
+                                <span id="d-userid" class="mono">••••••••••••</span>
+                            </div>
+                            <div class="sys-action-row">
+                                <button class="secondary-btn-small-id mono" onclick="copyText('d-userid')">COPY_ID</button>
                             </div>
                         </div>
-                        <div class="d-split">
-                            <div class="d-row">
-                                <span class="d-lab mono">VERIFIED</span>
-                                <span id="d-verified" class="mono"></span>
-                            </div>
-                            <div class="d-row">
-                                <span class="d-lab mono">PRIVATE</span>
-                                <span id="d-private" class="mono"></span>
-                            </div>
+                        
+                        <div class="sys-item split-box">
+                            <span class="sys-key mono">VERIFIED</span>
+                            <span id="d-verified" class="sys-data-label mono">--</span>
                         </div>
-                        <div class="d-row"><span class="d-lab mono">CREATED_AT</span><span id="d-created"></span></div>
-                        <div class="d-row">
-                            <span class="d-lab mono">SEC_UID</span>
-                            <div class="copy-field">
-                                <span id="d-secuid" class="mono truncate"></span>
-                                <button class="copy-btn" onclick="copyText('d-secuid')">COPY</button>
+                        <div class="sys-item split-box">
+                            <span class="sys-key mono">PRIVACY</span>
+                            <span id="d-private" class="sys-data-label mono">--</span>
+                        </div>
+
+                        <div class="sys-item full-width-box boxed-created">
+                            <span class="sys-key mono">Created At</span>
+                            <span id="d-created" class="sys-data-label mono">--</span>
+                        </div>
+
+                        <div class="sys-item full-width-box boxed-sys-group">
+                            <span class="sys-key mono">Sec UID</span>
+                            <div class="sys-value-field-flat" onclick="reveal(this)">
+                                <span id="d-secuid" class="mono truncate-id">••••••••••••••••</span>
+                            </div>
+                            <div class="sys-action-row">
+                                <button class="secondary-btn-small-id mono" onclick="copyText('d-secuid')">COPY_SEC_UID</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button id="dl-json" class="secondary-btn mono">DOWNLOAD_JSON</button>
+
+                <button id="dl-json" class="export-btn-mono mono">EXPORT_DATA_JSON</button>
             </div>
         </main>
 
         <footer class="status-footer">
             <div class="status-indicator">
                 <span class="pulse-dot"></span>
-                <span class="mono">SYSTEM_READY</span>
+                <span class="mono">GLOBAL_HITS: <span id="visitor-count">...</span></span>
             </div>
             <div class="credits">
-                <span class="mono">DEV_GITHUB: <a href="https://github.com/haithamaouati" target="_blank">HAITHAM_AOUATI</a></span>
+                <span class="mono">GitHub: <a href="https://github.com/haithamaouati" target="_blank" class="dev-link">HAITHAM_AOUATI</a></span>
             </div>
         </footer>
     </div>
