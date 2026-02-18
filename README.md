@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="125" height="125" src="logof.png">
+  <img width="48" height="48" src="logo.png">
   <br><b>Eyas</b></p>
   
   <p align="center">
