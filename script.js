@@ -9,6 +9,7 @@ const Eyas = {
 async function init() {
     updateGlobalCounter();
     setupAvatarDownload();
+    setupJSONExport();
     try {
         const [c, l, m] = await Promise.all([
             fetch('countries.json'), fetch('languages.json'), fetch('world.svg')
@@ -34,6 +35,21 @@ async function updateGlobalCounter() {
     } catch (err) { el.textContent = "1,024+"; }
 }
 
+function setupJSONExport() {
+    document.getElementById('dl-json').addEventListener('click', () => {
+        if (!Eyas.state.data) return;
+        const blob = new Blob([JSON.stringify(Eyas.state.data, null, 4)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `EYAS_DATA_${Eyas.state.data.user.uniqueId}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+}
+
 function setupAvatarDownload() {
     document.getElementById('avatar-download-trigger').addEventListener('click', async () => {
         const img = document.getElementById('u-avatar');
@@ -44,7 +60,7 @@ function setupAvatarDownload() {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `EYAS_EXTRACT_${Eyas.state.data?.user?.uniqueId || 'IMG'}.jpg`;
+            a.download = `AVATAR_${Eyas.state.data?.user?.uniqueId}.jpg`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
@@ -92,18 +108,15 @@ function render(payload) {
     document.getElementById('u-engagement').textContent = isFinite(rate) ? rate.toFixed(2) + "%" : "0.00%";
     
     const country = Eyas.state.countries.get(user.region?.toUpperCase());
-    const emoji = country ? country.emoji : "🌐";
     const countryName = country ? country.name.toUpperCase() : (user.region || "UNKNOWN");
-    document.getElementById('u-region-val').textContent = `REGION: ${emoji} ${countryName}`;
-    
+    document.getElementById('u-region-val').textContent = `REGION: ${country ? country.emoji : '🌐'} ${countryName}`;
     document.getElementById('u-lang-val').textContent = (Eyas.state.languages.get(user.language?.toLowerCase()) || user.language || 'EN').toUpperCase();
     document.getElementById('active-country-label').textContent = `MAPPED_LOC: ${countryName}`;
 
-    document.getElementById('d-verified').textContent = user.verified ? "Verified" : "False";
-    document.getElementById('d-private').textContent = user.privateAccount ? "False" : "Public";
+    document.getElementById('d-verified').textContent = user.verified ? "TRUE" : "FALSE";
+    document.getElementById('d-private').textContent = user.privateAccount ? "TRUE" : "FALSE";
     document.getElementById('d-created').textContent = tF(user.createTime);
     
-    // Reset masked states
     const uSpan = document.getElementById('d-userid');
     const sSpan = document.getElementById('d-secuid');
     uSpan.textContent = '••••••••••••';
@@ -129,11 +142,8 @@ function zoomToCountry(code) {
 document.getElementById('search-btn').addEventListener('click', async () => {
     const u = document.getElementById('username-input').value.trim().replace('@', '');
     if (!u) return;
-    
     const btn = document.getElementById('search-btn');
-    btn.textContent = "WAIT...";
-    btn.disabled = true;
-    
+    btn.textContent = "WAIT..."; btn.disabled = true;
     document.getElementById('app-content').classList.add('hidden');
     document.getElementById('loading-state').classList.remove('hidden');
     
@@ -142,20 +152,15 @@ document.getElementById('search-btn').addEventListener('click', async () => {
         const html = await res.text();
         const doc = new DOMParser().parseFromString(html, "text/html");
         const jsonEl = doc.querySelector('script[id="__UNIVERSAL_DATA_FOR_REHYDRATION__"]');
-        
         if (!jsonEl) throw new Error("SCRAPE_FAILURE");
-        
         const json = JSON.parse(jsonEl.textContent);
         const data = json?.__DEFAULT_SCOPE__?.['webapp.user-detail']?.userInfo;
-        
-        if (data) render(data);
-        else throw new Error("USER_NOT_FOUND");
+        if (data) render(data); else throw new Error("USER_NOT_FOUND");
     } catch (e) {
         alert(`CRITICAL_ERROR: ${e.message}`);
         document.getElementById('loading-state').classList.add('hidden');
     } finally {
-        btn.textContent = "Scrape";
-        btn.disabled = false;
+        btn.textContent = "Scrape"; btn.disabled = false;
     }
 });
 
