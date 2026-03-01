@@ -593,7 +593,7 @@
     "code": "ID"
 },
 {
-    "name": "Iran, Islamic Republic of Persian Gulf",
+    "name": "Iran",
     "dial_code": "+98",
     "emoji": "🇮🇷",
     "code": "IR"
@@ -601,7 +601,7 @@
 {
     "name": "Iraq",
     "dial_code": "+964",
-    "emoji": "🇮🇷",
+    "emoji": "🇮🇶",
     "code": "IQ"
 },
 {
@@ -1431,6 +1431,12 @@
     "dial_code": "+681",
     "emoji": "🇼🇫",
     "code": "WF"
+},
+{
+    "name": "Western Sahara",
+    "dial_code": "+212",
+    "emoji": "🇪🇭",
+    "code": "EH"
 },
 {
     "name": "Yemen",
