@@ -1,13 +1,10 @@
-const Eyas = {
+const Clawk = {
     state: { data: null, countries: new Map(), languages: new Map() },
     proxy: "https://corsproxy.io/?",
     worldMap: null,
-    counterNamespace: "eyas_scraper_v2_2026", 
-    counterKey: "hits"
 };
 
 async function init() {
-    updateGlobalCounter();
     setupAvatarDownload();
     setupJSONExport();
     try {
@@ -15,34 +12,25 @@ async function init() {
             fetch('countries.json'), fetch('languages.json'), fetch('world.svg')
         ]);
         const countries = await c.json();
-        countries.forEach(x => Eyas.state.countries.set(x.code.toUpperCase(), x));
+        countries.forEach(x => Clawk.state.countries.set(x.code.toUpperCase(), x));
         const languages = await l.json();
-        languages.forEach(x => Eyas.state.languages.set(x.code.toLowerCase(), x.name));
+        languages.forEach(x => Clawk.state.languages.set(x.code.toLowerCase(), x.name));
         
         const svgText = await m.text();
         const wrapper = document.getElementById('world-map-wrapper');
         wrapper.innerHTML = svgText;
-        Eyas.worldMap = wrapper.querySelector('svg');
+        Clawk.worldMap = wrapper.querySelector('svg');
     } catch (e) { console.error("INIT_ERR", e); }
-}
-
-async function updateGlobalCounter() {
-    const el = document.getElementById('visitor-count');
-    try {
-        const res = await fetch(`https://api.countapi.xyz/hit/${Eyas.counterNamespace}/${Eyas.counterKey}`);
-        const data = await res.json();
-        el.textContent = data.value.toLocaleString();
-    } catch (err) { el.textContent = "1,024+"; }
 }
 
 function setupJSONExport() {
     document.getElementById('dl-json').addEventListener('click', () => {
-        if (!Eyas.state.data) return;
-        const blob = new Blob([JSON.stringify(Eyas.state.data, null, 4)], { type: 'application/json' });
+        if (!Clawk.state.data) return;
+        const blob = new Blob([JSON.stringify(Clawk.state.data, null, 4)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `EYAS_DATA_${Eyas.state.data.user.uniqueId}.json`;
+        a.download = `Clawk_DATA_${Clawk.state.data.user.uniqueId}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -55,12 +43,12 @@ function setupAvatarDownload() {
         const img = document.getElementById('u-avatar');
         if (!img.src || img.src.includes(window.location.hostname)) return;
         try {
-            const response = await fetch(Eyas.proxy + encodeURIComponent(img.src));
+            const response = await fetch(Clawk.proxy + encodeURIComponent(img.src));
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `AVATAR_${Eyas.state.data?.user?.uniqueId}.jpg`;
+            a.download = `AVATAR_${Clawk.state.data?.user?.uniqueId}.jpg`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
@@ -78,15 +66,15 @@ const tF = (ts) => {
 };
 
 window.reveal = (el) => {
-    if (el.classList.contains('revealed') || !Eyas.state.data) return;
+    if (el.classList.contains('revealed') || !Clawk.state.data) return;
     const span = el.querySelector('span');
-    span.textContent = span.id === 'd-userid' ? Eyas.state.data.user.id : Eyas.state.data.user.secUid;
+    span.textContent = span.id === 'd-userid' ? Clawk.state.data.user.id : Clawk.state.data.user.secUid;
     el.classList.add('revealed');
 };
 
 function render(payload) {
     const { user, stats } = payload;
-    Eyas.state.data = payload;
+    Clawk.state.data = payload;
     
     document.getElementById('loading-state').classList.add('hidden');
     document.getElementById('app-content').classList.remove('hidden');
@@ -107,10 +95,10 @@ function render(payload) {
     const rate = ((stats.heartCount / (stats.videoCount || 1)) / (stats.followerCount || 1)) * 100;
     document.getElementById('u-engagement').textContent = isFinite(rate) ? rate.toFixed(2) + "%" : "0.00%";
     
-    const country = Eyas.state.countries.get(user.region?.toUpperCase());
+    const country = Clawk.state.countries.get(user.region?.toUpperCase());
     const countryName = country ? country.name.toUpperCase() : (user.region || "UNKNOWN");
     document.getElementById('u-region-val').textContent = `REGION: ${country ? country.emoji : '🌐'} ${countryName}`;
-    document.getElementById('u-lang-val').textContent = (Eyas.state.languages.get(user.language?.toLowerCase()) || user.language || 'EN').toUpperCase();
+    document.getElementById('u-lang-val').textContent = (Clawk.state.languages.get(user.language?.toLowerCase()) || user.language || 'EN').toUpperCase();
     document.getElementById('active-country-label').textContent = `MAPPED_LOC: ${countryName}`;
 
     document.getElementById('d-verified').textContent = user.verified ? "TRUE" : "FALSE";
@@ -128,14 +116,14 @@ function render(payload) {
 }
 
 function zoomToCountry(code) {
-    if (!Eyas.worldMap || !code) return;
-    const target = Eyas.worldMap.getElementById(code.toUpperCase());
+    if (!Clawk.worldMap || !code) return;
+    const target = Clawk.worldMap.getElementById(code.toUpperCase());
     document.querySelectorAll('.country-active').forEach(p => p.classList.remove('country-active'));
     if (target) {
         target.classList.add('country-active');
         const bbox = target.getBBox();
         const pad = 60;
-        Eyas.worldMap.setAttribute('viewBox', `${bbox.x - pad} ${bbox.y - pad} ${bbox.width + pad * 2} ${bbox.height + pad * 2}`);
+        Clawk.worldMap.setAttribute('viewBox', `${bbox.x - pad} ${bbox.y - pad} ${bbox.width + pad * 2} ${bbox.height + pad * 2}`);
     }
 }
 
@@ -148,7 +136,7 @@ document.getElementById('search-btn').addEventListener('click', async () => {
     document.getElementById('loading-state').classList.remove('hidden');
     
     try {
-        const res = await fetch(Eyas.proxy + encodeURIComponent(`https://www.tiktok.com/@${u}`));
+        const res = await fetch(Clawk.proxy + encodeURIComponent(`https://www.tiktok.com/@${u}`));
         const html = await res.text();
         const doc = new DOMParser().parseFromString(html, "text/html");
         const jsonEl = doc.querySelector('script[id="__UNIVERSAL_DATA_FOR_REHYDRATION__"]');
@@ -171,8 +159,8 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
 });
 
 window.copyText = (id) => {
-    if (!Eyas.state.data) return;
-    const text = id === 'd-userid' ? Eyas.state.data.user.id : Eyas.state.data.user.secUid;
+    if (!Clawk.state.data) return;
+    const text = id === 'd-userid' ? Clawk.state.data.user.id : Clawk.state.data.user.secUid;
     navigator.clipboard.writeText(text);
 };
 
