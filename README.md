@@ -6,4 +6,4 @@
     TikTok User Info Scraper 
   </p>
 
-  [https://haithamaouati.github.io/Eyas](https://haithamaouati.github.io/Eyas)
+  [https://haithamaouati.github.io/clawkscraper](https://haithamaouati.github.io/clawkscraper)
