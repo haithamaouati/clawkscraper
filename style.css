@@ -78,20 +78,33 @@ input::placeholder { color: var(--text-muted); font-size: 11px; text-transform: 
 .map-view-container { border: 1px solid var(--border); border-radius: 4px; padding: 15px; margin-bottom: 30px; background: rgba(255,255,255,0.01); }
 .map-header { font-size: 9px; color: var(--text-muted); margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
 .cool-map-surface { width: 100%; height: 260px; position: relative; overflow: hidden; background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%); }
-#world-map-wrapper svg { width: 100%; height: 100%; fill: var(--bg); stroke: var(--border); stroke-width: 0.5px; }
+/* Enhanced Map Surface */
+#world-map-wrapper svg { 
+    width: 100%; 
+    height: 100%; 
+    fill: var(--bg); 
+    /* Increased border contrast for unselected countries */
+    stroke: var(--accent); 
+    stroke-width: 0.8px; 
+    stroke-opacity: 0.15; 
+}
+
+/* High-Focus Active Country */
 .country-active { 
     fill: var(--accent) !important; 
-    opacity: 0.8; /* Increased base opacity for clarity */
+    opacity: 0.8 !important; 
     stroke: var(--accent) !important; 
-    stroke-width: 2.5px !important; /* Thicker border for definition */
-    filter: drop-shadow(0 0 5px var(--accent)); /* Focus glow */
-    animation: mapPulse 1.5s infinite ease-in-out; /* Faster frequency for urgency */
+    stroke-width: 2.5px !important; 
+    stroke-opacity: 1 !important;
+    filter: drop-shadow(0 0 5px var(--accent));
+    animation: mapPulse 1.5s infinite ease-in-out; 
 }
 
 @keyframes mapPulse { 
     0%, 100% { opacity: 0.4; stroke-width: 2.5px; } 
-    50% { opacity: 0.9; stroke-width: 4px; } /* Pulse both opacity and stroke thickness */
+    50% { opacity: 0.9; stroke-width: 4px; } 
 }
+
 #active-country-label { text-align: center; font-size: 10px; margin-top: 10px; color: var(--text-muted); letter-spacing: 1px; }
 
 /* Statistics */
